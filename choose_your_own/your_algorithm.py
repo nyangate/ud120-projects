@@ -3,7 +3,10 @@
 import matplotlib.pyplot as plt
 from prep_terrain_data import makeTerrainData
 from class_vis import prettyPicture
-
+from sklearn.ensemble import AdaBoostClassifier, RandomForestClassifier
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 
 
@@ -28,17 +31,31 @@ plt.show()
 ################################################################################
 
 
-### your code here!  name your classifier object clf if you want the 
+### your code here!  name your classifier object clf if you want the
 ### visualization code (prettyPicture) to show you the decision boundary
+clf = AdaBoostClassifier(DecisionTreeClassifier(max_depth=1),
+                         algorithm="SAMME",
+                         n_estimators=500)
+clf.fit(features_train,labels_train)
+predx = clf.predict(features_test)
+accuracy = accuracy_score(labels_test, predx)
+print ('Accuracy score by Adaboost ',accuracy)
+
+clf2 = KNeighborsClassifier(3)
+clf2.fit(features_train,labels_train)
+predx = clf2.predict(features_test)
+accuracy = accuracy_score(labels_test, predx)
+print ('Accuracy score by KNN ',accuracy)
 
 
 
+clf2 = RandomForestClassifier(max_depth=9, n_estimators=10, max_features=1)
+clf2.fit(features_train,labels_train)
+predx = clf2.predict(features_test)
+accuracy = accuracy_score(labels_test, predx)
+print ('Accuracy score by RandomForestClassifier ',accuracy)
 
-
-
-
-
-try:
-    prettyPicture(clf, features_test, labels_test)
-except NameError:
-    pass
+# try:
+#     prettyPicture(clf, features_test, labels_test)
+# except NameError:
+#     pass
